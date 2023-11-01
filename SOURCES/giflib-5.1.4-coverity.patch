@@ -1,0 +1,82 @@
+diff --git a/util/gif2rgb.c b/util/gif2rgb.c
+index e39f37b..92bf82f 100644
+--- a/util/gif2rgb.c
++++ b/util/gif2rgb.c
+@@ -171,6 +171,8 @@ static void SaveGif(GifByteType *OutputBuffer,
+     /* Open stdout for the output file: */
+     if ((GifFile = EGifOpenFileHandle(1, &Error)) == NULL) {
+ 	PrintGifError(Error);
++	free(OutputBuffer);
++	GifFreeMapObject(OutputColorMap);
+ 	exit(EXIT_FAILURE);
+     }
+ 
+@@ -179,25 +181,34 @@ static void SaveGif(GifByteType *OutputBuffer,
+ 			  OutputColorMap) == GIF_ERROR ||
+ 	EGifPutImageDesc(GifFile,
+ 			 0, 0, Width, Height, false, NULL) ==
+-	                                                             GIF_ERROR)
++	                                                             GIF_ERROR) {
+ 	PrintGifError(Error);
++	free(OutputBuffer);
++	GifFreeMapObject(OutputColorMap);
+ 	exit(EXIT_FAILURE);
++    }
+ 
+     GifQprintf("\n%s: Image 1 at (%d, %d) [%dx%d]:     ",
+ 	       PROGRAM_NAME, GifFile->Image.Left, GifFile->Image.Top,
+ 	       GifFile->Image.Width, GifFile->Image.Height);
+ 
+     for (i = 0; i < Height; i++) {
+-	if (EGifPutLine(GifFile, Ptr, Width) == GIF_ERROR)
++	if (EGifPutLine(GifFile, Ptr, Width) == GIF_ERROR) {
++	    free(OutputBuffer);
++	    GifFreeMapObject(OutputColorMap);
+ 	    exit(EXIT_FAILURE);
++	}
+ 	GifQprintf("\b\b\b\b%-4d", Height - i - 1);
+ 
+ 	Ptr += Width;
+     }
+ 
+-    if (EGifCloseFile(GifFile, &Error) == GIF_ERROR)
++    if (EGifCloseFile(GifFile, &Error) == GIF_ERROR) {
+ 	PrintGifError(Error);
++	free(OutputBuffer);
++	GifFreeMapObject(OutputColorMap);
+ 	exit(EXIT_FAILURE);
++    }
+ }
+ 
+ /******************************************************************************
+diff --git a/util/gifsponge.c b/util/gifsponge.c
+index 6e248d8..12bce36 100644
+--- a/util/gifsponge.c
++++ b/util/gifsponge.c
+@@ -73,8 +73,7 @@ int main(int argc, char **argv)
+      * data; it's *your* responsibility to keep your changes consistent.
+      * Caveat hacker!
+      */
+-    if (EGifSpew(GifFileOut) == GIF_ERROR)
+-	PrintGifError(GifFileOut->Error);
++    EGifSpew(GifFileOut);
+ 
+     if (DGifCloseFile(GifFileIn, &ErrorCode) == GIF_ERROR)
+ 	PrintGifError(ErrorCode);
+diff --git a/util/giftool.c b/util/giftool.c
+index e61281c..fe6325c 100644
+--- a/util/giftool.c
++++ b/util/giftool.c
+@@ -565,9 +565,9 @@ int main(int argc, char **argv)
+     for (i = 0; i < GifFileIn->ImageCount; i++)
+ 	(void) GifMakeSavedImage(GifFileOut, &GifFileIn->SavedImages[i]);
+ 
+-    if (EGifSpew(GifFileOut) == GIF_ERROR)
+-	PrintGifError(GifFileOut->Error);
+-    else if (DGifCloseFile(GifFileIn, &ErrorCode) == GIF_ERROR)
++    EGifSpew(GifFileOut);
++
++    if (DGifCloseFile(GifFileIn, &ErrorCode) == GIF_ERROR)
+ 	PrintGifError(ErrorCode);
+ 
+     return 0;

@@ -1,0 +1,13 @@
+diff --git a/doc/Makefile.am b/doc/Makefile.am
+index b9696ea..698104b 100644
+--- a/doc/Makefile.am
++++ b/doc/Makefile.am
+@@ -1,7 +1,7 @@
+ SUFFIXES = .xml .html .txt .asc .1
+ 
+ .xml.html:
+-	xmlto xhtml-nochunks $<
++	xmlto --stringparam generate.consistent.ids=1 xhtml-nochunks $<
+ 
+ .xml.1:
+ 	xmlto man $<
