@@ -1,7 +1,7 @@
 Name:          giflib
 Summary:       A library and utilities for processing GIFs
 Version:       5.2.1
-Release:       22%{?dist}
+Release:       22%{?dist}.1
 
 License:       MIT
 URL:           http://www.sourceforge.net/projects/%{name}/
@@ -21,6 +21,9 @@ Patch3:        CVE-2022-28506.patch
 # Taken from Debian package
 Patch4:        fix-get-args-segment-violation.patch
 Patch5:        giflib-5.2.1-fixsnprintf.patch
+# from upstream, for <= 6.1.1, RHEL-154849
+# https://sourceforge.net/p/giflib/code/ci/f5b7267aed3665ef025c13823e454170d031c106/
+Patch6:        giflib-5.2.1-cve-2026-23868.patch
 
 
 BuildRequires: cmake
@@ -108,6 +111,8 @@ cp -a %{SOURCE1} .
 %mingw_cmake
 %mingw_make_build
 
+# remove extra index.html.in
+rm doc/index.html.in
 
 %install
 %cmake_install
@@ -153,6 +158,9 @@ rm -rf %{buildroot}%{mingw64_mandir}
 
 
 %changelog
+* Thu Mar 19 2026 Michal Hlavinka <mhlavink@redhat.com> - 5.2.1-22.1
+- fix CVE-2026-23868: double free in GifMakeSavedImage (RHEL-154849)
+
 * Thu Feb 06 2025 Michal Hlavinka <mhlavink@redhat.com> - 5.2.1-22
 - fix giftext memmory access error (RHEL-77803)
 
