@@ -1,7 +1,7 @@
 Name:          giflib
 Summary:       A library and utilities for processing GIFs
 Version:       5.2.1
-Release:       9%{?dist}.1
+Release:       10%{?dist}.1
 
 License:       MIT
 URL:           http://www.sourceforge.net/projects/%{name}/
@@ -12,7 +12,7 @@ Patch0:        giflib_quantize.patch
 Patch1:        giflib_coverity.patch
 # Generate HTML docs with consistent section IDs to avoid multilib difference
 Patch2:        giflib_html-docs-consistent-ids.patch
-# from upstream, for <= 6.1.1, RHEL-154863
+# from upstream, for <= 6.1.1, RHEL-154864
 # https://sourceforge.net/p/giflib/code/ci/f5b7267aed3665ef025c13823e454170d031c106/
 Patch3:        giflib-5.2.1-cve-2026-23868.patch
 
@@ -80,8 +80,11 @@ rm -f %{buildroot}%{_libdir}/libgif.a
 
 
 %changelog
-* Tue Mar 31 2026 Michal Hlavinka <mhlavink@redhat.com> - 5.2.1-9.1
-- fix CVE-2026-23868: double free in GifMakeSavedImage (RHEL-154863)
+* Mon May 11 2026 Michal Hlavinka <mhlavink@redhat.com> - 5.2.1-10.1
+- rebuild
+
+* Tue Mar 24 2026 Michal Hlavinka <mhlavink@redhat.com> - 5.2.1-10
+- fix CVE-2026-23868: double free in GifMakeSavedImage (RHEL-154864)
 
 * Mon Aug 09 2021 Mohan Boddu <mboddu@redhat.com> - 5.2.1-9
 - Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
