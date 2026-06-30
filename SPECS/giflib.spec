@@ -1,7 +1,7 @@
 Name:          giflib
 Summary:       A library and utilities for processing GIFs
 Version:       5.2.1
-Release:       10%{?dist}.1
+Release:       10%{?dist}.2
 
 License:       MIT
 URL:           http://www.sourceforge.net/projects/%{name}/
@@ -15,6 +15,9 @@ Patch2:        giflib_html-docs-consistent-ids.patch
 # from upstream, for <= 6.1.1, RHEL-154864
 # https://sourceforge.net/p/giflib/code/ci/f5b7267aed3665ef025c13823e454170d031c106/
 Patch3:        giflib-5.2.1-cve-2026-23868.patch
+# sent upstream, RHEL-157133
+# https://sourceforge.net/p/giflib/bugs/199/
+Patch4:        giflib-5.2.1-cve-2026-26740.patch
 
 BuildRequires: gcc
 BuildRequires: make
@@ -80,6 +83,9 @@ rm -f %{buildroot}%{_libdir}/libgif.a
 
 
 %changelog
+* Mon Jun 08 2026 Michal Hlavinka <mhlavink@redhat.com> - 5.2.1-10.2
+- fix CVE-2026-26740: buffer overflow in EGifGCBToExtension (RHEL-157133)
+
 * Mon May 11 2026 Michal Hlavinka <mhlavink@redhat.com> - 5.2.1-10.1
 - rebuild
 
